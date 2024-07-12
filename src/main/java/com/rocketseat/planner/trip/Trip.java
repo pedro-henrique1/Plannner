@@ -18,7 +18,6 @@ import org.springframework.scheduling.annotation.Schedules;
 
 @Entity
 @Table(name = "TRIPS")
-//@Schedules("planner")
 @Getter
 @Setter
 @NoArgsConstructor

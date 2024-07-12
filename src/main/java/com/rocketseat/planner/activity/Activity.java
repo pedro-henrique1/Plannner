@@ -1,7 +1,6 @@
-package com.rocketseat.planner.activities;
+package com.rocketseat.planner.activity;
 
 import com.rocketseat.planner.trip.Trip;
-import com.rocketseat.planner.trip.TripResquestPayload;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

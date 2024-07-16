@@ -4,16 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import org.springframework.scheduling.annotation.Schedules;
+
+import javax.validation.constraints.NotBlank;
 
 
 @Entity
@@ -46,7 +49,7 @@ public class Trip {
     @Column(name = "owner_email", nullable = false)
     private String ownerEmail;
 
-    public Trip(TripResquestPayload data){
+    public Trip(TripResquestPayload data) {
         this.destination = data.destination();
         this.isConfirmed = false;
         this.ownerEmail = data.owner_email();

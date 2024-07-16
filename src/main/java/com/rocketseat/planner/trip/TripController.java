@@ -5,11 +5,22 @@ import com.rocketseat.planner.activity.ActivityData;
 import com.rocketseat.planner.activity.ActivityResponse;
 import com.rocketseat.planner.activity.ActivityRequestPayload;
 import com.rocketseat.planner.activity.ActivityService;
+import com.rocketseat.planner.exception.TripValidator;
 import com.rocketseat.planner.link.*;
 import com.rocketseat.planner.participant.*;
+import org.apache.el.util.Validation;
+import org.hibernate.dialect.function.AvgFunction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,17 +43,20 @@ public class TripController {
     @Autowired
     private LinkService linkService;
 
+
     @PostMapping
-    public ResponseEntity<TripCreateResponse> createTrip(@RequestBody TripResquestPayload payload) {
-        Trip newTrip = new Trip(payload);
+    public ResponseEntity<?> createTrip(@Valid @RequestBody TripResquestPayload payload, BindingResult result) {
 
-        this.repository.save(newTrip);
-
-        this.participantService.registerParticipantsToEvent(payload.emails_to_invite(), newTrip);
-
-
-        return ResponseEntity.ok(new TripCreateResponse(newTrip.getId()));
+        if (result.hasErrors()) {
+            return new ResponseEntity<>("error create", HttpStatus.BAD_REQUEST);
+        } else {
+            Trip newTrip = new Trip(payload);
+            this.repository.save(newTrip);
+            this.participantService.registerParticipantsToEvent(payload.emails_to_invite(), newTrip);
+            return new ResponseEntity<>(newTrip.getId(), HttpStatus.CREATED);
+        }
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Trip> getTripDetails(@PathVariable UUID id) {
